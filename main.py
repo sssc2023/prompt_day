@@ -93,17 +93,18 @@ with col3:
         st.write("가습기가 선택되었습니다.")
         st.session_state.selected_device = 'HM'
 
-st.subheader("PDF에게 질문해보세요!")
+st.write("---")
 col_ac, col_tv, col_hm = st.columns(3)
 # 질문하기 창이 나타나는 조건을 추가
 # Air Conditioner
 if st.session_state.selected_device == 'AC':
     with col_ac:
-        st.subheader("에어컨")
+        st.subheader("에어컨에게 질문해보세요!")
         ac_img = Image.open('air-conditioner.png')
         ac_img = ac_img.resize((100, 100))
         st.image(ac_img)
-        ac_question = st.text_input('에어컨에게 질문을 입력하세요', key='ac')
+        ac_question = st.text_input('안녕하세요, 전 에어컨이에요. 슝슝~', key='ac')
+        st.write("---")
         with st.spinner('Wait for it...'):
             llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
             qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever())
@@ -119,11 +120,12 @@ if st.session_state.selected_device == 'AC':
 # TV
 elif st.session_state.selected_device == 'TV':
     with col_tv:
-        st.subheader("TV")
+        st.subheader("TV에게 질문해보세요!")
         tv_img = Image.open('television.png')
         tv_img = tv_img.resize((100, 100))
         st.image(tv_img)
-        tv_question = st.text_input('TV에게 질문을 입력하세요')
+        tv_question = st.text_input('텔레비전에게 물어봐티비~')
+        st.write("---")
         with st.spinner('Wait for it...'):
             llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
             qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_tv.as_retriever())
@@ -139,11 +141,12 @@ elif st.session_state.selected_device == 'TV':
 # Humidifier
 elif st.session_state.selected_device == 'HM':
     with col_hm:
-        st.subheader("가습기")
+        st.subheader("가습기에게 질문해보세요!")
         hm_img = Image.open('humidifier.png')
         hm_img = hm_img.resize((100, 100))
         st.image(hm_img)
-        hm_question = st.text_input('가습기에게 질문을 입력하세요', key='hm')
+        hm_question = st.text_input('안녕? 내가 아는 모든  촉촉하게 알려줄게!', key='hm')
+        st.write("---")
         with st.spinner('Wait for it...'):
             llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
             qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_hm.as_retriever())
