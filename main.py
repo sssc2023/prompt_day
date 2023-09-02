@@ -107,7 +107,7 @@ if st.session_state.selected_device == 'AC':
         with st.spinner('Wait for it...'):
             llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
             qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever())
-            result = qa_chain({"query": ac_question+'대답을 <슝슝>으로 끝내줘. 예시: 알겠슝슝'})
+            result = qa_chain({"query": ac_question+'대답을 다 마치고 <슝슝!>이라고 말해줘'})
             st.session_state.chat_history['AC'].append({"question": ac_question, "answer": result["result"]})
 
         # 챗 기록 출력
@@ -128,7 +128,7 @@ elif st.session_state.selected_device == 'TV':
         with st.spinner('Wait for it...'):
             llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
             qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_tv.as_retriever())
-            result = qa_chain({"query": tv_question+'대답을 <티비>로 끝내줘. 예시: 알겠티비' })
+            result = qa_chain({"query": tv_question+'대답을 다 마치고 <떼레비!>라고 말해줘' })
             st.session_state.chat_history['TV'].append({"question": tv_question, "answer": result["result"]})
 
         # 챗 기록 출력
@@ -149,7 +149,7 @@ elif st.session_state.selected_device == 'HM':
         with st.spinner('Wait for it...'):
             llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
             qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_hm.as_retriever())
-            result = qa_chain({"query": hm_question+'대답을 <축축>으로 끝내줘. 예시: 알겠축축'})
+            result = qa_chain({"query": hm_question+'대답을 다 마치고 <축축!>이라고 말해줘'})
             st.session_state.chat_history['HM'].append({"question": hm_question, "answer": result["result"]})
 
         # 챗 기록 출력
