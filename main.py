@@ -74,7 +74,7 @@ st.write("---")
 # 질문하기 창이 나타나는 조건을 추가
 # Air Conditioner
 if st.session_state.selected_device == 'AC':
-    st.subheader("에어컨에게 질문해보세요!")
+    st.subheader("❄️에어컨에게 질문해보세요!")
     ac_img = Image.open('picture/air-conditioner.png')
     ac_img = ac_img.resize((100, 100))
     st.image(ac_img)
@@ -94,7 +94,7 @@ if st.session_state.selected_device == 'AC':
 
 # TV
 elif st.session_state.selected_device == 'TV':
-    st.subheader("TV에게 질문해보세요!")
+    st.subheader("📺TV에게 질문해보세요!")
     tv_img = Image.open('picture/television.png')
     tv_img = tv_img.resize((100, 100))
     st.image(tv_img)
@@ -114,7 +114,7 @@ elif st.session_state.selected_device == 'TV':
 
 # Humidifier
 elif st.session_state.selected_device == 'HM':
-    st.subheader("가습기에게 질문해보세요!")
+    st.subheader("💧가습기에게 질문해보세요!")
     hm_img = Image.open('picture/humidifier.png')
     hm_img = hm_img.resize((100, 100))
     st.image(hm_img)
