@@ -42,7 +42,7 @@ if uploaded_file is not None:
         is_separator_regex = False,
     )
     texts = text_splitter.split_documents(pages)
-    persist_directory = './'
+    persist_directory = 'https://github.com/sssc2023/prompt_day.git'
     #Embedding
     embeddings_model = OpenAIEmbeddings()
 
