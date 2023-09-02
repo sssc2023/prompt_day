@@ -123,7 +123,7 @@ elif st.session_state.selected_device == 'HM':
         hm_img = Image.open('picture/humidifier.png')
         hm_img = hm_img.resize((100, 100))
         st.image(hm_img)
-        hm_question = st.text_input('안녕? 내가 아는 모든걸  촉촉하게 알려줄게!', key='hm')
+        hm_question = st.text_input('안녕? 내가 아는 모든 걸 촉촉하게 알려줄게!', key='hm')
         st.write("---")
         with st.spinner('Wait for it...'):
             qa_chain_hm = RetrievalQA.from_chain_type(llm, retriever=db_hm.as_retriever())
