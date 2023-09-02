@@ -32,6 +32,12 @@ db_tv = Chroma(persist_directory='./tv', embedding_function=OpenAIEmbeddings())
 db_hm = Chroma(persist_directory='./hm', embedding_function=OpenAIEmbeddings())
 llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
 
+def wrap_text(text, line_length=18):  # 챗봇 글자수 조절..
+    lines = []
+    for i in range(0, len(text), line_length):
+        lines.append(text[i:i + line_length])
+    return "\n".join(lines)
+
 
 # 초기 세션 상태 설정
 if 'chat_history' not in st.session_state:
