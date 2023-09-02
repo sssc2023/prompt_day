@@ -59,14 +59,14 @@ with col1:
 
 with col2:
     st.image("picture/person_TV.jpg", width=100)
-    st.markdown("📺TV를 <br/> 바라본다", unsafe_allow_html=True)
+    st.markdown("📺TV를 바라본다", unsafe_allow_html=True)
     if st.button("TV 선택"):
         st.success("TV가 선택되었습니다.")
         st.session_state.selected_device = 'TV'
 
 with col3:
     st.image("picture/person_HM.jpg", width=100)
-    st.markdown("💧가습기를 <br/> 바라본다", unsafe_allow_html=True)
+    st.markdown("💧가습기를 바라본다", unsafe_allow_html=True)
     if st.button("가습기 선택"):
         st.success("가습기가 선택되었습니다.")
         st.session_state.selected_device = 'HM'
