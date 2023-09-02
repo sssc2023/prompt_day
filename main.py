@@ -34,7 +34,7 @@ def git_clone_and_commit_and_push(db):
     except subprocess.CalledProcessError:
         subprocess.run(['git', '-C', 'prompt_day', 'pull'], check=True)
 
-    db_path = 'your_repo/db.pkl'
+    db_path = 'prompt_day/db.pkl'
     with open(db_path, 'wb') as f:
         pickle.dump(db, f)
 
