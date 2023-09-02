@@ -72,67 +72,64 @@ with col3:
         st.session_state.selected_device = 'HM'
 
 st.write("---")
-col_ac, col_tv, col_hm = st.columns(3)
+
 # 질문하기 창이 나타나는 조건을 추가
 # Air Conditioner
 if st.session_state.selected_device == 'AC':
-    with col_ac:
-        st.subheader("에어컨에게 질문해보세요!")
-        ac_img = Image.open('picture/air-conditioner.png')
-        ac_img = ac_img.resize((100, 100))
-        st.image(ac_img)
-        ac_question = st.text_input('안녕하세요, 전 에어컨이에요. 슝슝~', key='ac')
-        st.write("---")
-        with st.spinner('Wait for it...'):
-            qa_chain_ac = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever())
-            if ac_question != "":
-                result = qa_chain_ac({"query": ac_question + '대답을 다 마치고 슝슝!이라고 말해줘'})
-                st.session_state.chat_history['AC'].append({"question": ac_question, "answer": result["result"]})
+    st.subheader("에어컨에게 질문해보세요!")
+    ac_img = Image.open('picture/air-conditioner.png')
+    ac_img = ac_img.resize((100, 100))
+    st.image(ac_img)
+    ac_question = st.text_input('안녕하세요, 전 에어컨이에요. 슝슝~', key='ac')
+    st.write("---")
+    with st.spinner('Wait for it...'):
+        qa_chain_ac = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever())
+        if ac_question != "":
+            result = qa_chain_ac({"query": ac_question + '대답을 다 마치고 슝슝!이라고 말해줘'})
+            st.session_state.chat_history['AC'].append({"question": ac_question, "answer": result["result"]})
 
-        # 챗 기록 출력
-        for chat in st.session_state.chat_history['AC']:
-            st.text(f"🤔 {wrap_text(chat['question'])}")
-            st.text(f"😊 {wrap_text(chat['answer'])}")
-            st.write("---")
+    # 챗 기록 출력
+    for chat in st.session_state.chat_history['AC']:
+        st.text(f"🤔 {wrap_text(chat['question'])}")
+        st.text(f"😊 {wrap_text(chat['answer'])}")
+        st.write("---")
 
 # TV
 elif st.session_state.selected_device == 'TV':
-    with col_tv:
-        st.subheader("TV에게 질문해보세요!")
-        tv_img = Image.open('picture/television.png')
-        tv_img = tv_img.resize((100, 100))
-        st.image(tv_img)
-        tv_question = st.text_input('텔레비전에게 물어봐티비~')
-        st.write("---")
-        with st.spinner('Wait for it...'):
-            qa_chain_tv = RetrievalQA.from_chain_type(llm, retriever=db_tv.as_retriever())
-            if tv_question != "":
-                result = qa_chain_tv({"query": tv_question + '대답을 다 마치고 떼레비!라고 말해줘'})
-                st.session_state.chat_history['TV'].append({"question": tv_question, "answer": result["result"]})
+    st.subheader("TV에게 질문해보세요!")
+    tv_img = Image.open('picture/television.png')
+    tv_img = tv_img.resize((100, 100))
+    st.image(tv_img)
+    tv_question = st.text_input('텔레비전에게 물어봐티비~')
+    st.write("---")
+    with st.spinner('Wait for it...'):
+        qa_chain_tv = RetrievalQA.from_chain_type(llm, retriever=db_tv.as_retriever())
+        if tv_question != "":
+            result = qa_chain_tv({"query": tv_question + '대답을 다 마치고 떼레비!라고 말해줘'})
+            st.session_state.chat_history['TV'].append({"question": tv_question, "answer": result["result"]})
 
-        # 챗 기록 출력
-        for chat in st.session_state.chat_history['TV']:
-            st.text(f"🤔 {wrap_text(chat['question'])}")
-            st.text(f"😊 {wrap_text(chat['answer'])}")
-            st.write("---")
+    # 챗 기록 출력
+    for chat in st.session_state.chat_history['TV']:
+        st.text(f"🤔 {wrap_text(chat['question'])}")
+        st.text(f"😊 {wrap_text(chat['answer'])}")
+        st.write("---")
 
 # Humidifier
 elif st.session_state.selected_device == 'HM':
-    with col_hm:
-        st.subheader("가습기에게 질문해보세요!")
-        hm_img = Image.open('picture/humidifier.png')
-        hm_img = hm_img.resize((100, 100))
-        st.image(hm_img)
-        hm_question = st.text_input('안녕? 내가 아는 모든 걸 촉촉하게 알려줄게!', key='hm')
-        st.write("---")
-        with st.spinner('Wait for it...'):
-            qa_chain_hm = RetrievalQA.from_chain_type(llm, retriever=db_hm.as_retriever())
-            if hm_question != "":
-                result = qa_chain_hm({"query": hm_question + '대답을 다 마치고 축축!이라고 말해줘'})
-                st.session_state.chat_history['HM'].append({"question": hm_question, "answer": result["result"]})
+    st.subheader("가습기에게 질문해보세요!")
+    hm_img = Image.open('picture/humidifier.png')
+    hm_img = hm_img.resize((100, 100))
+    st.image(hm_img)
+    hm_question = st.text_input('안녕? 내가 아는 모든 걸 촉촉하게 알려줄게!', key='hm')
+    st.write("---")
+    with st.spinner('Wait for it...'):
+        qa_chain_hm = RetrievalQA.from_chain_type(llm, retriever=db_hm.as_retriever())
+        if hm_question != "":
+            result = qa_chain_hm({"query": hm_question + '대답을 다 마치고 축축!이라고 말해줘'})
+            st.session_state.chat_history['HM'].append({"question": hm_question, "answer": result["result"]})
 
-        # 챗 기록 출력
-        for chat in st.session_state.chat_history['HM']:
-            st.text(f"🤔 {wrap_text(chat['question'])}")
-            st.text(f"😊 {wrap_text(chat['answer'])}")
-            st.write("---")
+    # 챗 기록 출력
+    for chat in st.session_state.chat_history['HM']:
+        st.text(f"🤔 {wrap_text(chat['question'])}")
+        st.text(f"😊 {wrap_text(chat['answer'])}")
+        st.write("---")
