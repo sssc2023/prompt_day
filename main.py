@@ -34,7 +34,7 @@ def pdf_to_document(uploaded_file):
 def git_clone_and_commit_and_push():
     try:
         subprocess.run(['git', 'clone', 'https://github.com/sssc2023/prompt_day.git'], check=True)
-        subprocess.run(['git', 'add', 'db'], cwd='prompt_day', check=True)  # 'db'가 실제 추가하려는 파일 또는 폴더 이름이라고 가정
+        subprocess.run(['git', 'add', db], cwd='prompt_day', check=True)  # 'db'가 실제 추가하려는 파일 또는 폴더 이름이라고 가정
         subprocess.run(['git', 'commit', '-m', 'Add generated file'], cwd='prompt_day', check=True)
         subprocess.run(['git', 'push', 'origin', 'master'], cwd='prompt_day', check=True)
     except subprocess.CalledProcessError as e:
