@@ -15,9 +15,6 @@ import time
 
 # 제목
 st.title("SightnSpeak")
-st.title("가보자고", divider='rainbow')
-st.title("가보자고")
-st.header(' ', divider='rainbow')
 
 # 방 이미지
 cyworld_img = Image.open('picture/livingroom.jpg')
