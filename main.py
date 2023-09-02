@@ -49,6 +49,10 @@ def document_to_db(uploaded_file, size):    # 문서 크기에 맞게 사이즈 
     # load it into Chroma
     db = Chroma.from_documents(texts, embeddings_model)
     return db
+    
+db_ac = document_to_db(ac_file, 500)
+db_tv = document_to_db(tv_file, 500)
+db_hm = document_to_db(hm_file, 300)
 
 def wrap_text(text, line_length=18): # 챗봇 글자수 조절..
     lines = []
@@ -63,11 +67,6 @@ if 'chat_history' not in st.session_state:
 if 'selected_device' not in st.session_state:
     st.session_state.selected_device = None
 
-# 업로드 되면 동작하는 코드
-if ac_file is not None and tv_file is not None and hm_file is not None:
-    db_ac = document_to_db(ac_file, 500)
-    db_tv = document_to_db(tv_file, 500)
-    db_hm = document_to_db(hm_file, 300)
 
     # Choice
 st.subheader("기기를 바라보고 선택하세요!")
