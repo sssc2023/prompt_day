@@ -9,6 +9,7 @@ from langchain.vectorstores import Chroma
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
+from langchain import PromptTemplate
 import streamlit as st
 import tempfile
 import os
