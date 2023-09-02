@@ -42,7 +42,7 @@ if uploaded_file is not None:
         is_separator_regex = False,
     )
     texts = text_splitter.split_documents(pages)
-    persist_directory = 'C:\Users\hsum9\PycharmProjects'
+    persist_directory = r'C:\Users\hsum9\PycharmProjects'
     #Embedding
     embeddings_model = OpenAIEmbeddings()
 
