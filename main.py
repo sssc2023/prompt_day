@@ -50,7 +50,7 @@ def document_to_db(uploaded_file, size):    # 문서 크기에 맞게 사이즈 
     db = Chroma.from_documents(texts, embeddings_model)
     return db
 
-def wrap_text(text, line_length=16): # 챗봇 글자수 조절..
+def wrap_text(text, line_length=18): # 챗봇 글자수 조절..
     lines = []
     for i in range(0, len(text), line_length):
         lines.append(text[i:i + line_length])
@@ -60,87 +60,98 @@ def wrap_text(text, line_length=16): # 챗봇 글자수 조절..
 # 초기 세션 상태 설정
 if 'chat_history' not in st.session_state:
     st.session_state.chat_history = {'AC': [], 'TV': [], 'HM': []}
+if 'selected_device' not in st.session_state:
+    st.session_state.selected_device = None
 
 # 업로드 되면 동작하는 코드
+if ac_file is not None and tv_file is not None and hm_file is not None:
+    db_ac = document_to_db(ac_file, 500)
+    db_tv = document_to_db(tv_file, 500)
+    db_hm = document_to_db(hm_file, 300)
 
-db_ac = document_to_db(ac_file, 500)
-db_tv = document_to_db(tv_file, 500)
-db_hm = document_to_db(hm_file, 300)
-
-# Choice
+    # Choice
 st.subheader("기기를 바라보고 선택하세요!")
 col1, col2, col3 = st.columns(3)
-st.subheader("PDF에게 질문해보세요!")
-col_ac, col_tv, col_hm = st.columns(3)
-
 with col1:
     st.image("person_AC.jpg", width=100)
     st.markdown("에어컨을 <br/> 바라본다", unsafe_allow_html=True)
     if st.button("에어컨 선택"):
         st.write("에어컨이 선택되었습니다.")
-        with col_ac:
-            st.subheader("에어컨")
-            ac_img = Image.open('air-conditioner.png')
-            ac_img = ac_img.resize((100, 100))
-            st.image(ac_img)
-            ac_question = st.text_input('에어컨에게 질문을 입력하세요', key='ac')
-            if st.button('에어컨에게 질문하기'):
-                with st.spinner('Wait for it...'):
-                    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
-                    qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever())
-                    result = qa_chain({"query": ac_question})
-                    st.session_state.chat_history['AC'].append({"question": ac_question, "answer": result["result"]})
-
-            # 챗 기록 출력
-            for chat in st.session_state.chat_history['AC']:
-                st.text(f"🤔 {wrap_text(chat['question'])}")
-                st.text(f"😊 {wrap_text(chat['answer'])}")
-                st.write("---")
+        st.session_state.selected_device = 'AC'
 
 with col2:
     st.image("person_TV.jpg", width=100)
     st.markdown("TV를 <br/> 바라본다", unsafe_allow_html=True)
     if st.button("TV 선택"):
         st.write("TV가 선택되었습니다.")
-        with col_tv:
-            st.subheader("TV")
-            tv_img = Image.open('television.png')
-            tv_img = tv_img.resize((100, 100))
-            st.image(tv_img)
-            tv_question = st.text_input('TV에게 질문을 입력하세요')
-            if st.button('TV에게 질문하기', key='tv_button'):
-                with st.spinner('Wait for it...'):
-                    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
-                    qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_tv.as_retriever())
-                    result = qa_chain({"query": tv_question})
-                    st.session_state.chat_history['TV'].append({"question": tv_question, "answer": result["result"]})
-
-            # 챗 기록 출력
-            for chat in st.session_state.chat_history['TV']:
-                st.text(f"🤔 {wrap_text(chat['question'])}")
-                st.text(f"😊 {wrap_text(chat['answer'])}")
-                st.write("---")
+        st.session_state.selected_device = 'TV'
 
 with col3:
     st.image("person_HM.jpg", width=100)
     st.markdown("가습기를 <br/> 바라본다", unsafe_allow_html=True)
     if st.button("가습기 선택"):
         st.write("가습기가 선택되었습니다.")
-        with col_hm:
-            st.subheader("가습기")
-            hm_img = Image.open('humidifier.png')
-            hm_img = hm_img.resize((100, 100))
-            st.image(hm_img)
-            hm_question = st.text_input('가습기에게 질문을 입력하세요', key='hm')
-            if st.button('가습기에게 질문하기'):
-                with st.spinner('Wait for it...'):
-                    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
-                    qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_hm.as_retriever())
-                    result = qa_chain({"query": hm_question})
-                    st.session_state.chat_history['HM'].append({"question": hm_question, "answer": result["result"]})
+        st.session_state.selected_device = 'HM'
 
-            # 챗 기록 출력
-            for chat in st.session_state.chat_history['HM']:
-                st.text(f"🤔 {wrap_text(chat['question'])}")
-                st.text(f"😊 {wrap_text(chat['answer'])}")
-                st.write("---")
+st.subheader("PDF에게 질문해보세요!")
+col_ac, col_tv, col_hm = st.columns(3)
+# 질문하기 창이 나타나는 조건을 추가
+# Air Conditioner
+if st.session_state.selected_device == 'AC':
+    with col_ac:
+        st.subheader("에어컨")
+        ac_img = Image.open('air-conditioner.png')
+        ac_img = ac_img.resize((100, 100))
+        st.image(ac_img)
+        ac_question = st.text_input('에어컨에게 질문을 입력하세요', key='ac')
+        with st.spinner('Wait for it...'):
+            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+            qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever())
+            result = qa_chain({"query": ac_question})
+            st.session_state.chat_history['AC'].append({"question": ac_question, "answer": result["result"]})
+
+        # 챗 기록 출력
+        for chat in st.session_state.chat_history['AC']:
+            st.text(f"🤔 {wrap_text(chat['question'])}")
+            st.text(f"😊 {wrap_text(chat['answer'])}")
+            st.write("---")
+
+# TV
+elif st.session_state.selected_device == 'TV':
+    with col_tv:
+        st.subheader("TV")
+        tv_img = Image.open('television.png')
+        tv_img = tv_img.resize((100, 100))
+        st.image(tv_img)
+        tv_question = st.text_input('TV에게 질문을 입력하세요')
+        with st.spinner('Wait for it...'):
+            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+            qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_tv.as_retriever())
+            result = qa_chain({"query": tv_question})
+            st.session_state.chat_history['TV'].append({"question": tv_question, "answer": result["result"]})
+
+        # 챗 기록 출력
+        for chat in st.session_state.chat_history['TV']:
+            st.text(f"🤔 {wrap_text(chat['question'])}")
+            st.text(f"😊 {wrap_text(chat['answer'])}")
+            st.write("---")
+
+# Humidifier
+elif st.session_state.selected_device == 'HM':
+    with col_hm:
+        st.subheader("가습기")
+        hm_img = Image.open('humidifier.png')
+        hm_img = hm_img.resize((100, 100))
+        st.image(hm_img)
+        hm_question = st.text_input('가습기에게 질문을 입력하세요', key='hm')
+        with st.spinner('Wait for it...'):
+            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+            qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_hm.as_retriever())
+            result = qa_chain({"query": hm_question})
+            st.session_state.chat_history['HM'].append({"question": hm_question, "answer": result["result"]})
+
+        # 챗 기록 출력
+        for chat in st.session_state.chat_history['HM']:
+            st.text(f"🤔 {wrap_text(chat['question'])}")
+            st.text(f"😊 {wrap_text(chat['answer'])}")
+            st.write("---")
