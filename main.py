@@ -1,5 +1,6 @@
 __import__('pysqlite3')
 import sys
+
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 from langchain.document_loaders import PyPDFLoader
@@ -14,13 +15,13 @@ import os
 from PIL import Image
 import time
 
-#파일 업로드
+# 파일 업로드
 # ["samsung_tv_manual.pdf", "lg_ac_manual.pdf", "winix_humidifier_manual.pdf"]
 tv_file = PyPDFLoader("samsung_tv_manual.pdf")
 ac_file = PyPDFLoader("lg_ac_manual.pdf")
 hm_file = PyPDFLoader("winix_humidifier_manual.pdf")
 
-#제목
+# 제목
 st.title("SightnSpeak")
 st.write("---")
 
@@ -31,30 +32,34 @@ cyworld_img = cyworld_img.resize((650, int(650 * (cyworld_img.height / cyworld_i
 st.image(cyworld_img, width=650)
 st.write("---")
 
-def document_to_db(uploaded_file, size):    # 문서 크기에 맞게 사이즈 지정하면 좋을 것 같아서 para 넣었어용
+
+def document_to_db(uploaded_file, size):  # 문서 크기에 맞게 사이즈 지정하면 좋을 것 같아서 para 넣었어용
     pages = uploaded_file.load_and_split()
-    #Split
+    # Split
     text_splitter = RecursiveCharacterTextSplitter(
         # Set a really small chunk size, just to show.
-        chunk_size = size,
-        chunk_overlap  = 20,
-        length_function = len,
-        is_separator_regex = False,
+        chunk_size=size,
+        chunk_overlap=20,
+        length_function=len,
+        is_separator_regex=False,
     )
     texts = text_splitter.split_documents(pages)
 
-    #Embedding
+    # Embedding
     embeddings_model = OpenAIEmbeddings()
 
     # load it into Chroma
     db = Chroma.from_documents(texts, embeddings_model)
     return db
-    
+
+
 db_ac = document_to_db(ac_file, 500)
 db_tv = document_to_db(tv_file, 500)
 db_hm = document_to_db(hm_file, 300)
+llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
 
-def wrap_text(text, line_length=18): # 챗봇 글자수 조절..
+
+def wrap_text(text, line_length=18):  # 챗봇 글자수 조절..
     lines = []
     for i in range(0, len(text), line_length):
         lines.append(text[i:i + line_length])
@@ -66,7 +71,6 @@ if 'chat_history' not in st.session_state:
     st.session_state.chat_history = {'AC': [], 'TV': [], 'HM': []}
 if 'selected_device' not in st.session_state:
     st.session_state.selected_device = None
-
 
     # Choice
 st.subheader("기기를 바라보고 선택하세요!")
@@ -105,9 +109,8 @@ if st.session_state.selected_device == 'AC':
         ac_question = st.text_input('안녕하세요, 전 에어컨이에요. 슝슝~', key='ac')
         st.write("---")
         with st.spinner('Wait for it...'):
-            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
-            qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever())
-            result = qa_chain({"query": ac_question+'대답을 다 마치고 슝슝!이라고 말해줘'})
+            qa_chain_ac = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever())
+            result = qa_chain_ac({"query": ac_question + '대답을 다 마치고 슝슝!이라고 말해줘'})
             st.session_state.chat_history['AC'].append({"question": ac_question, "answer": result["result"]})
 
         # 챗 기록 출력
@@ -126,9 +129,8 @@ elif st.session_state.selected_device == 'TV':
         tv_question = st.text_input('텔레비전에게 물어봐티비~')
         st.write("---")
         with st.spinner('Wait for it...'):
-            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
-            qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_tv.as_retriever())
-            result = qa_chain({"query": tv_question+'대답을 다 마치고 떼레비!라고 말해줘' })
+            qa_chain_tv = RetrievalQA.from_chain_type(llm, retriever=db_tv.as_retriever())
+            result = qa_chain_tv({"query": tv_question + '대답을 다 마치고 떼레비!라고 말해줘'})
             st.session_state.chat_history['TV'].append({"question": tv_question, "answer": result["result"]})
 
         # 챗 기록 출력
@@ -147,9 +149,8 @@ elif st.session_state.selected_device == 'HM':
         hm_question = st.text_input('안녕? 내가 아는 모든걸  촉촉하게 알려줄게!', key='hm')
         st.write("---")
         with st.spinner('Wait for it...'):
-            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
-            qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_hm.as_retriever())
-            result = qa_chain({"query": hm_question+'대답을 다 마치고 축축!이라고 말해줘'})
+            qa_chain_hm = RetrievalQA.from_chain_type(llm, retriever=db_hm.as_retriever())
+            result = qa_chain_hm({"query": hm_question + '대답을 다 마치고 축축!이라고 말해줘'})
             st.session_state.chat_history['HM'].append({"question": hm_question, "answer": result["result"]})
 
         # 챗 기록 출력
