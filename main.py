@@ -54,21 +54,21 @@ with col1:
     st.image("picture/person_AC.jpg", width=100)
     st.markdown("❄️에어컨을 <br/> 바라본다", unsafe_allow_html=True)
     if st.button("에어컨 선택"):
-        st.write("에어컨이 선택되었습니다.")
+        st.success("에어컨이 선택되었습니다.")
         st.session_state.selected_device = 'AC'
 
 with col2:
     st.image("picture/person_TV.jpg", width=100)
     st.markdown("📺TV를 <br/> 바라본다", unsafe_allow_html=True)
     if st.button("TV 선택"):
-        st.write("TV가 선택되었습니다.")
+        st.success("TV가 선택되었습니다.")
         st.session_state.selected_device = 'TV'
 
 with col3:
     st.image("picture/person_HM.jpg", width=100)
     st.markdown("💧가습기를 <br/> 바라본다", unsafe_allow_html=True)
     if st.button("가습기 선택"):
-        st.write("가습기가 선택되었습니다.")
+        st.success("가습기가 선택되었습니다.")
         st.session_state.selected_device = 'HM'
 
 st.write("---")
