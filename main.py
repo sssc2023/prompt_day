@@ -1,22 +1,23 @@
 __import__('pysqlite3')
 import sys
-import pickle
-import subprocess
-import os
-import tempfile
-import streamlit as st
-
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
 from langchain.embeddings import OpenAIEmbeddings
+from langchain.chat_models import ChatOpenAI
+from langchain.chains import RetrievalQA
+import streamlit as st
+import tempfile
+import os
 
-# Streamlit UI
+#제목
 st.title("ChatPDF")
 st.write("---")
-uploaded_file = st.file_uploader("PDF 파일을 올려주세요!", type=['pdf'])
+
+#파일 업로드
+uploaded_file = st.file_uploader("PDF 파일을 올려주세요!",type=['pdf'])
 st.write("---")
 
 def pdf_to_document(uploaded_file):
@@ -28,37 +29,43 @@ def pdf_to_document(uploaded_file):
     pages = loader.load_and_split()
     return pages
 
-def git_clone_and_commit_and_push(db):
-    try:
-        subprocess.run(['git', 'clone', 'https://github.com/sssc2023/prompt_day.git'], check=True)
-    except subprocess.CalledProcessError:
-        subprocess.run(['git', '-C', 'prompt_day', 'pull'], check=True)
-
-    db_path = 'prompt_day/db.pkl'
-    with open(db_path, 'wb') as f:
-        pickle.dump(db, f)
-
-    try:
-        subprocess.run(['git', '-C', 'prompt_day', 'add', 'db.pkl'], check=True)
-        subprocess.run(['git', '-C', 'prompt_day', 'commit', '-m', 'Add new db object'], check=True)
-        subprocess.run(['git', '-C', 'prompt_day', 'push', 'origin', 'master'], check=True)
-        st.write("Successfully committed and pushed the changes.")
-    except subprocess.CalledProcessError as e:
-        st.write(f"Error in Git operations: {e}")
-
+#업로드 되면 동작하는 코드
 if uploaded_file is not None:
     pages = pdf_to_document(uploaded_file)
-    
+
+    #Split
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=300,
-        chunk_overlap=20,
-        length_function=len,
-        is_separator_regex=False,
+        # Set a really small chunk size, just to show.
+        chunk_size = 300,
+        chunk_overlap  = 20,
+        length_function = len,
+        is_separator_regex = False,
     )
     texts = text_splitter.split_documents(pages)
-    
-    embeddings_model = OpenAIEmbeddings()
-    db = Chroma.from_documents(documents=texts, embedding=embeddings_model)
-    db.persist()
 
-    git_clone_and_commit_and_push(db)
+    #Embedding
+    embeddings_model = OpenAIEmbeddings()
+
+    persist_directory = 'db'
+    # load it into Chroma
+    db = Chroma.from_documents(documents=texts,
+                                 embedding=embeddings_model,
+                                 persist_directory=persist_directory)
+    db.persist()
+    db = None
+    db = Chroma(persist_directory=persist_directory,
+                  embedding_function=embeddings_model)
+
+    # load it into Chroma
+    #db = Chroma.from_documents(texts, embeddings_model)
+
+    #Question
+    st.header("PDF에게 질문해보세요!!")
+    question = st.text_input('질문을 입력하세요')
+
+    if st.button('질문하기'):
+        with st.spinner('Wait for it...'):
+            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+            qa_chain = RetrievalQA.from_chain_type(llm,retriever=db.as_retriever())
+            result = qa_chain({"query": question})
+            st.write(result["result"])
