@@ -108,7 +108,7 @@ if st.session_state.selected_device == 'AC':
         with st.spinner('Wait for it...'):
             llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
             qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever())
-            result = qa_chain({"query": ac_question})
+            result = qa_chain({"query": ac_question+'대답을 <슝슝>으로 끝내줘. 예시: 알겠슝슝'})
             st.session_state.chat_history['AC'].append({"question": ac_question, "answer": result["result"]})
 
         # 챗 기록 출력
@@ -129,7 +129,7 @@ elif st.session_state.selected_device == 'TV':
         with st.spinner('Wait for it...'):
             llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
             qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_tv.as_retriever())
-            result = qa_chain({"query": tv_question})
+            result = qa_chain({"query": tv_question+'대답을 <티비>로 끝내줘. 예시: 알겠티비' })
             st.session_state.chat_history['TV'].append({"question": tv_question, "answer": result["result"]})
 
         # 챗 기록 출력
@@ -145,12 +145,12 @@ elif st.session_state.selected_device == 'HM':
         hm_img = Image.open('humidifier.png')
         hm_img = hm_img.resize((100, 100))
         st.image(hm_img)
-        hm_question = st.text_input('안녕? 내가 아는 모든  촉촉하게 알려줄게!', key='hm')
+        hm_question = st.text_input('안녕? 내가 아는 모든걸  촉촉하게 알려줄게!', key='hm')
         st.write("---")
         with st.spinner('Wait for it...'):
             llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
             qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_hm.as_retriever())
-            result = qa_chain({"query": hm_question})
+            result = qa_chain({"query": hm_question+'대답을 <축축>으로 끝내줘. 예시: 알겠축축'})
             st.session_state.chat_history['HM'].append({"question": hm_question, "answer": result["result"]})
 
         # 챗 기록 출력
