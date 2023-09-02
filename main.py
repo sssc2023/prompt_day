@@ -46,7 +46,7 @@ if 'selected_device' not in st.session_state:
     st.session_state.selected_device = None
 
     # Choice
-st.subheader("기기를 바라보고 선택하세요!")
+st.subheader("선택할 기기를 바라보세요!")
 col1, col2, col3 = st.columns(3)
 with col1:
     st.image("picture/person_AC.jpg", width=100)
