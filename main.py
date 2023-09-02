@@ -78,69 +78,69 @@ with col1:
     st.markdown("에어컨을 <br/> 바라본다", unsafe_allow_html=True)
     if st.button("에어컨 선택"):
         st.write("에어컨이 선택되었습니다.")
-    with col_ac:
-        st.subheader("에어컨")
-        ac_img = Image.open('air-conditioner.png')
-        ac_img = ac_img.resize((100, 100))
-        st.image(ac_img)
-        ac_question = st.text_input('에어컨에게 질문을 입력하세요', key='ac')
-        if st.button('에어컨에게 질문하기'):
-            with st.spinner('Wait for it...'):
-                llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
-                qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever())
-                result = qa_chain({"query": ac_question})
-                st.session_state.chat_history['AC'].append({"question": ac_question, "answer": result["result"]})
+        with col_ac:
+            st.subheader("에어컨")
+            ac_img = Image.open('air-conditioner.png')
+            ac_img = ac_img.resize((100, 100))
+            st.image(ac_img)
+            ac_question = st.text_input('에어컨에게 질문을 입력하세요', key='ac')
+            if st.button('에어컨에게 질문하기'):
+                with st.spinner('Wait for it...'):
+                    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+                    qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever())
+                    result = qa_chain({"query": ac_question})
+                    st.session_state.chat_history['AC'].append({"question": ac_question, "answer": result["result"]})
 
-        # 챗 기록 출력
-        for chat in st.session_state.chat_history['AC']:
-            st.text(f"🤔 {wrap_text(chat['question'])}")
-            st.text(f"😊 {wrap_text(chat['answer'])}")
-            st.write("---")
+            # 챗 기록 출력
+            for chat in st.session_state.chat_history['AC']:
+                st.text(f"🤔 {wrap_text(chat['question'])}")
+                st.text(f"😊 {wrap_text(chat['answer'])}")
+                st.write("---")
 
 with col2:
     st.image("person_TV.jpg", width=100)
     st.markdown("TV를 <br/> 바라본다", unsafe_allow_html=True)
     if st.button("TV 선택"):
         st.write("TV가 선택되었습니다.")
-    with col_tv:
-        st.subheader("TV")
-        tv_img = Image.open('television.png')
-        tv_img = tv_img.resize((100, 100))
-        st.image(tv_img)
-        tv_question = st.text_input('TV에게 질문을 입력하세요')
-        if st.button('TV에게 질문하기', key='tv_button'):
-            with st.spinner('Wait for it...'):
-                llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
-                qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_tv.as_retriever())
-                result = qa_chain({"query": tv_question})
-                st.session_state.chat_history['TV'].append({"question": tv_question, "answer": result["result"]})
+        with col_tv:
+            st.subheader("TV")
+            tv_img = Image.open('television.png')
+            tv_img = tv_img.resize((100, 100))
+            st.image(tv_img)
+            tv_question = st.text_input('TV에게 질문을 입력하세요')
+            if st.button('TV에게 질문하기', key='tv_button'):
+                with st.spinner('Wait for it...'):
+                    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+                    qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_tv.as_retriever())
+                    result = qa_chain({"query": tv_question})
+                    st.session_state.chat_history['TV'].append({"question": tv_question, "answer": result["result"]})
 
-        # 챗 기록 출력
-        for chat in st.session_state.chat_history['TV']:
-            st.text(f"🤔 {wrap_text(chat['question'])}")
-            st.text(f"😊 {wrap_text(chat['answer'])}")
-            st.write("---")
+            # 챗 기록 출력
+            for chat in st.session_state.chat_history['TV']:
+                st.text(f"🤔 {wrap_text(chat['question'])}")
+                st.text(f"😊 {wrap_text(chat['answer'])}")
+                st.write("---")
 
 with col3:
     st.image("person_HM.jpg", width=100)
     st.markdown("가습기를 <br/> 바라본다", unsafe_allow_html=True)
     if st.button("가습기 선택"):
         st.write("가습기가 선택되었습니다.")
-    with col_hm:
-        st.subheader("가습기")
-        hm_img = Image.open('humidifier.png')
-        hm_img = hm_img.resize((100, 100))
-        st.image(hm_img)
-        hm_question = st.text_input('가습기에게 질문을 입력하세요', key='hm')
-        if st.button('가습기에게 질문하기'):
-            with st.spinner('Wait for it...'):
-                llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
-                qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_hm.as_retriever())
-                result = qa_chain({"query": hm_question})
-                st.session_state.chat_history['HM'].append({"question": hm_question, "answer": result["result"]})
+        with col_hm:
+            st.subheader("가습기")
+            hm_img = Image.open('humidifier.png')
+            hm_img = hm_img.resize((100, 100))
+            st.image(hm_img)
+            hm_question = st.text_input('가습기에게 질문을 입력하세요', key='hm')
+            if st.button('가습기에게 질문하기'):
+                with st.spinner('Wait for it...'):
+                    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+                    qa_chain = RetrievalQA.from_chain_type(llm, retriever=db_hm.as_retriever())
+                    result = qa_chain({"query": hm_question})
+                    st.session_state.chat_history['HM'].append({"question": hm_question, "answer": result["result"]})
 
-        # 챗 기록 출력
-        for chat in st.session_state.chat_history['HM']:
-            st.text(f"🤔 {wrap_text(chat['question'])}")
-            st.text(f"😊 {wrap_text(chat['answer'])}")
-            st.write("---")
+            # 챗 기록 출력
+            for chat in st.session_state.chat_history['HM']:
+                st.text(f"🤔 {wrap_text(chat['question'])}")
+                st.text(f"😊 {wrap_text(chat['answer'])}")
+                st.write("---")
