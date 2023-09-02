@@ -52,7 +52,7 @@ st.subheader("기기를 바라보고 선택하세요!")
 col1, col2, col3 = st.columns(3)
 with col1:
     st.image("picture/person_AC.jpg", width=100)
-    st.markdown("❄️에어컨을 <br/> 바라본다", unsafe_allow_html=True)
+    st.markdown("❄️에어컨을 바라본다", unsafe_allow_html=True)
     if st.button("에어컨 선택"):
         st.success("에어컨이 선택되었습니다.")
         st.session_state.selected_device = 'AC'
