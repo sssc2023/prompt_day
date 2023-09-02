@@ -86,9 +86,7 @@ if st.session_state.selected_device == 'AC':
         {context}
 
         질문: {question}"""
-        PROMPT = PromptTemplate(
-            template=prompt_template, input_variables=["context", "question"]
-        )
+        PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
         chain_type_kwargs = {"prompt": PROMPT}
         qa_chain_ac = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever(), chain_type_kwargs=chain_type_kwargs)
         if ac_question != "":
@@ -115,9 +113,7 @@ elif st.session_state.selected_device == 'TV':
         {context}
 
         질문: {question}"""
-        PROMPT = PromptTemplate(
-            template=prompt_template, input_variables=["context", "question"]
-        )
+        PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
         chain_type_kwargs = {"prompt": PROMPT}
         qa_chain_tv = RetrievalQA.from_chain_type(llm, retriever=db_tv.as_retriever(), chain_type_kwargs=chain_type_kwargs)
         if tv_question != "":
@@ -144,9 +140,7 @@ elif st.session_state.selected_device == 'HM':
         {context}
 
         질문: {question}"""
-        PROMPT = PromptTemplate(
-            template=prompt_template, input_variables=["context", "question"]
-        )
+        PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
         chain_type_kwargs = {"prompt": PROMPT}
         qa_chain_hm = RetrievalQA.from_chain_type(llm, retriever=db_hm.as_retriever(), chain_type_kwargs=chain_type_kwargs)
         if hm_question != "":
