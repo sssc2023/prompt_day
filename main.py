@@ -77,6 +77,7 @@ if st.session_state.selected_device == 'AC':
         prompt_template = """마지막 질문에 답변하기 위해 다음과 같은 정보를 사용하십시오.
         답을 모르면 그냥 모른다고 말하고, 답을 지어내려 하지 마세요. 그리고 에어컨이 사람이 되어 대답하는 것처럼 답변해주세요.
         말끝마다 '슝~'을 붙여주세요.
+        
         {context}
 
         질문: {question}"""
@@ -104,7 +105,8 @@ elif st.session_state.selected_device == 'TV':
     with st.spinner('Wait for it...'):
         prompt_template = """마지막 질문에 답변하기 위해 다음과 같은 정보를 사용하십시오.
         답을 모르면 그냥 모른다고 말하고, 답을 지어내려 하지 마세요. 그리고 텔레비전이 사람이 되어 대답하는 것처럼 답변해주세요.
-        말끝마다 '이상이다티비!'를 붙여주세요.
+        친구에게 대답하는 것처럼 답변해주세요. 말끝마다 '티비!'를 붙여주세요.
+        
         {context}
 
         질문: {question}"""
@@ -133,6 +135,7 @@ elif st.session_state.selected_device == 'HM':
         prompt_template = """마지막 질문에 답변하기 위해 다음과 같은 정보를 사용하십시오.
         답을 모르면 그냥 모른다고 말하고, 답을 지어내려 하지 마세요. 그리고 가습기가 사람이 되어 대답하는 것처럼 답변해주세요.
         말끝마다 '축축~'을 붙여주세요.
+        
         {context}
 
         질문: {question}"""
