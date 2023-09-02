@@ -1,25 +1,22 @@
 __import__('pysqlite3')
 import sys
+import pickle
+import subprocess
+import os
+import tempfile
+import streamlit as st
+
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
 from langchain.embeddings import OpenAIEmbeddings
-from langchain.chat_models import ChatOpenAI
-from langchain.chains import RetrievalQA
-import streamlit as st
-import tempfile
-import os
-import subprocess
 
-
-#제목
+# Streamlit UI
 st.title("ChatPDF")
 st.write("---")
-
-#파일 업로드
-uploaded_file = st.file_uploader("PDF 파일을 올려주세요!",type=['pdf'])
+uploaded_file = st.file_uploader("PDF 파일을 올려주세요!", type=['pdf'])
 st.write("---")
 
 def pdf_to_document(uploaded_file):
@@ -31,33 +28,37 @@ def pdf_to_document(uploaded_file):
     pages = loader.load_and_split()
     return pages
 
-def git_clone_and_commit_and_push():
+def git_clone_and_commit_and_push(db):
     try:
         subprocess.run(['git', 'clone', 'https://github.com/sssc2023/prompt_day.git'], check=True)
-        subprocess.run(['git', 'add', db], cwd='prompt_day', check=True)  # 'db'가 실제 추가하려는 파일 또는 폴더 이름이라고 가정
-        subprocess.run(['git', 'commit', '-m', 'Add generated file'], cwd='prompt_day', check=True)
-        subprocess.run(['git', 'push', 'origin', 'master'], cwd='prompt_day', check=True)
-    except subprocess.CalledProcessError as e:
-        st.write(f"Git 명령어 실행 중 에러 발생: {e}")
+    except subprocess.CalledProcessError:
+        subprocess.run(['git', '-C', 'prompt_day', 'pull'], check=True)
 
-#업로드 되면 동작하는 코드
+    db_path = 'your_repo/db.pkl'
+    with open(db_path, 'wb') as f:
+        pickle.dump(db, f)
+
+    try:
+        subprocess.run(['git', '-C', 'prompt_day', 'add', 'db.pkl'], check=True)
+        subprocess.run(['git', '-C', 'prompt_day', 'commit', '-m', 'Add new db object'], check=True)
+        subprocess.run(['git', '-C', 'prompt_day', 'push', 'origin', 'master'], check=True)
+        st.write("Successfully committed and pushed the changes.")
+    except subprocess.CalledProcessError as e:
+        st.write(f"Error in Git operations: {e}")
+
 if uploaded_file is not None:
     pages = pdf_to_document(uploaded_file)
-
-    #Split
+    
     text_splitter = RecursiveCharacterTextSplitter(
-        # Set a really small chunk size, just to show.
-        chunk_size = 300,
-        chunk_overlap  = 20,
-        length_function = len,
-        is_separator_regex = False,
+        chunk_size=300,
+        chunk_overlap=20,
+        length_function=len,
+        is_separator_regex=False,
     )
     texts = text_splitter.split_documents(pages)
-    #Embedding
+    
     embeddings_model = OpenAIEmbeddings()
-
-    # load it into Chroma
     db = Chroma.from_documents(documents=texts, embedding=embeddings_model)
     db.persist()
 
-    git_clone_and_commit_and_push()
+    git_clone_and_commit_and_push(db)
