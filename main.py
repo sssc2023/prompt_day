@@ -79,7 +79,7 @@ if st.session_state.selected_device == 'AC':
         말끝마다 슝을 붙여주세요.
         {context}
 
-        질문: {ac_question}"""
+        질문: {question}"""
         PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
         chain_type_kwargs = {"prompt": PROMPT}
         qa_chain_ac = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever(), chain_type_kwargs=chain_type_kwargs)
@@ -107,7 +107,7 @@ elif st.session_state.selected_device == 'TV':
         말끝마다 티비를 붙여주세요. 예를 들면 '알겠티비!'같이 대답해주세요.
         {context}
 
-        질문: {tv_question}"""
+        질문: {question}"""
         PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
         chain_type_kwargs = {"prompt": PROMPT}
         qa_chain_tv = RetrievalQA.from_chain_type(llm, retriever=db_tv.as_retriever(), chain_type_kwargs=chain_type_kwargs)
@@ -135,7 +135,7 @@ elif st.session_state.selected_device == 'HM':
         말끝마다 축축을 붙여주세요.
         {context}
 
-        질문: {hm_question}"""
+        질문: {question}"""
         PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
         chain_type_kwargs = {"prompt": PROMPT}
         qa_chain_hm = RetrievalQA.from_chain_type(llm, retriever=db_hm.as_retriever(), chain_type_kwargs=chain_type_kwargs)
