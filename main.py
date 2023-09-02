@@ -9,16 +9,18 @@ from langchain.vectorstores import Chroma
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
+from langchain.prompts import PromptTemplate
 import streamlit as st
 import tempfile
 import os
 from PIL import Image
 import time
 
+
 # 제목
 st.title("SightnSpeak")
 st.title("가보자고")
-st.header(' ', divider='rainbow')
+st.write("---")
 
 # 방 이미지
 cyworld_img = Image.open('picture/livingroom.jpg')
@@ -31,6 +33,7 @@ db_ac = Chroma(persist_directory='./ac', embedding_function=OpenAIEmbeddings())
 db_tv = Chroma(persist_directory='./tv', embedding_function=OpenAIEmbeddings())
 db_hm = Chroma(persist_directory='./hm', embedding_function=OpenAIEmbeddings())
 llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+
 
 def wrap_text(text, line_length=18):  # 챗봇 글자수 조절..
     lines = []
@@ -46,7 +49,7 @@ if 'selected_device' not in st.session_state:
     st.session_state.selected_device = None
 
     # Choice
-st.subheader("선택할 기기를 바라보세요!")
+st.subheader("기기를 바라보고 선택하세요!")
 col1, col2, col3 = st.columns(3)
 with col1:
     st.image("picture/person_AC.jpg", width=100)
@@ -74,27 +77,37 @@ st.write("---")
 # 질문하기 창이 나타나는 조건을 추가
 # Air Conditioner
 if st.session_state.selected_device == 'AC':
-    st.subheader("❄️에어컨에게 질문해보세요!")
+    st.subheader("에어컨에게 질문해보세요!")
     ac_img = Image.open('picture/air-conditioner.png')
     ac_img = ac_img.resize((100, 100))
     st.image(ac_img)
     ac_question = st.text_input('안녕하세요, 전 에어컨이에요. 슝슝~', key='ac')
     st.write("---")
     with st.spinner('Wait for it...'):
-        qa_chain_ac = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever())
+        prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
+
+        {context}
+
+        Question: {question}
+        Answer in Italian:"""
+        PROMPT = PromptTemplate(
+            template=prompt_template, input_variables=["context", "question"]
+        )
+        chain_type_kwargs = {"prompt": PROMPT}
+        qa_chain_ac = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever(), chain_type_kwargs=chain_type_kwargs)
         if ac_question != "":
             result = qa_chain_ac({"query": ac_question + '대답을 다 마치고 슝슝!이라고 말해줘'})
             st.session_state.chat_history['AC'].append({"question": ac_question, "answer": result["result"]})
 
     # 챗 기록 출력
     for chat in st.session_state.chat_history['AC']:
-        st.text(f"🤔 {chat['question']}")
-        st.text(f"😊 {chat['answer']}")
+        st.text(f"🤔 {wrap_text(chat['question'])}")
+        st.text(f"😊 {wrap_text(chat['answer'])}")
         st.write("---")
 
 # TV
 elif st.session_state.selected_device == 'TV':
-    st.subheader("📺TV에게 질문해보세요!")
+    st.subheader("TV에게 질문해보세요!")
     tv_img = Image.open('picture/television.png')
     tv_img = tv_img.resize((100, 100))
     st.image(tv_img)
@@ -108,13 +121,13 @@ elif st.session_state.selected_device == 'TV':
 
     # 챗 기록 출력
     for chat in st.session_state.chat_history['TV']:
-        st.text(f"🤔 {chat['question']}")
-        st.text(f"😊 {chat['answer']}")
+        st.text(f"🤔 {wrap_text(chat['question'])}")
+        st.text(f"😊 {wrap_text(chat['answer'])}")
         st.write("---")
 
 # Humidifier
 elif st.session_state.selected_device == 'HM':
-    st.subheader("💧가습기에게 질문해보세요!")
+    st.subheader("가습기에게 질문해보세요!")
     hm_img = Image.open('picture/humidifier.png')
     hm_img = hm_img.resize((100, 100))
     st.image(hm_img)
@@ -128,6 +141,6 @@ elif st.session_state.selected_device == 'HM':
 
     # 챗 기록 출력
     for chat in st.session_state.chat_history['HM']:
-        st.text(f"🤔 {chat['question']}")
-        st.text(f"😊 {chat['answer']}")
+        st.text(f"🤔 {wrap_text(chat['question'])}")
+        st.text(f"😊 {wrap_text(chat['answer'])}")
         st.write("---")
