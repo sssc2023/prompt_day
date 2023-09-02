@@ -91,7 +91,27 @@ if st.session_state.selected_device == 'AC':
         PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
         chain_type_kwargs = {"prompt": PROMPT}
         qa_chain_ac = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever(), chain_type_kwargs=chain_type_kwargs)
-이 말해주세요.
+        if ac_question != "":
+            result = qa_chain_ac({"query": ac_question})
+            st.session_state.chat_history['AC'].append({"question": ac_question, "answer": result["result"]})
+
+    # 챗 기록 출력
+    for chat in st.session_state.chat_history['AC']:
+        st.text(f"🤔 {chat['question']}")
+        st.text(f"😊 {chat['answer']}")
+        st.write("---")
+
+elif st.session_state.selected_device == 'TV':
+    st.subheader("📺TV에게 질문해보세요!")
+    tv_img = Image.open('picture/television.png')
+    tv_img = tv_img.resize((100, 100))
+    st.image(tv_img)
+    tv_question = st.text_input('텔레비전에게 물어봐티비~')
+    st.write("---")
+    with st.spinner('Wait for it...'):
+        prompt_template = """마지막 질문에 답변하기 위해 다음과 같은 정보를 사용하십시오.
+        답을 모르면 그냥 모른다고 말하고, 답을 지어내려 하지 마세요. 그리고 티비가 사람이 되어 대답하는 것처럼 답변해주세요.
+        말끝마다 티비를 붙여주세요. 예를 들면 '알겠티비~'같이 대답해주세요.
         {context}
 
         질문: {tv_question}"""
