@@ -18,6 +18,7 @@ import time
 
 # 제목
 st.title("SightnSpeak")
+st.title("LETS GO")
 st.write("---")
 
 # 방 이미지
