@@ -15,11 +15,6 @@ import os
 from PIL import Image
 import time
 
-# 파일 업로드
-# ["samsung_tv_manual.pdf", "lg_ac_manual.pdf", "winix_humidifier_manual.pdf"]
-tv_file = PyPDFLoader("samsung_tv_manual.pdf")
-ac_file = PyPDFLoader("lg_ac_manual.pdf")
-hm_file = PyPDFLoader("winix_humidifier_manual.pdf")
 
 # 제목
 st.title("SightnSpeak")
@@ -32,30 +27,9 @@ cyworld_img = cyworld_img.resize((650, int(650 * (cyworld_img.height / cyworld_i
 st.image(cyworld_img, width=650)
 st.write("---")
 
-
-def document_to_db(uploaded_file, size):  # 문서 크기에 맞게 사이즈 지정하면 좋을 것 같아서 para 넣었어용
-    pages = uploaded_file.load_and_split()
-    # Split
-    text_splitter = RecursiveCharacterTextSplitter(
-        # Set a really small chunk size, just to show.
-        chunk_size=size,
-        chunk_overlap=20,
-        length_function=len,
-        is_separator_regex=False,
-    )
-    texts = text_splitter.split_documents(pages)
-
-    # Embedding
-    embeddings_model = OpenAIEmbeddings()
-
-    # load it into Chroma
-    db = Chroma.from_documents(texts, embeddings_model)
-    return db
-
-
-db_ac = document_to_db(ac_file, 500)
-db_tv = document_to_db(tv_file, 500)
-db_hm = document_to_db(hm_file, 300)
+db_ac = Chroma(persist_directory='./ac', embedding_function=OpenAIEmbeddings())
+db_tv = Chroma(persist_directory='./tv', embedding_function=OpenAIEmbeddings())
+db_hm = Chroma(persist_directory='./hm', embedding_function=OpenAIEmbeddings())
 llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
 
 
