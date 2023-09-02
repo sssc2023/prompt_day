@@ -18,7 +18,7 @@ import time
 
 # 제목
 st.title("SightnSpeak")
-st.title("LETS GO")
+st.title("LETS GOGO")
 st.write("---")
 
 # 방 이미지
@@ -85,8 +85,9 @@ if st.session_state.selected_device == 'AC':
         st.write("---")
         with st.spinner('Wait for it...'):
             qa_chain_ac = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever())
-            result = qa_chain_ac({"query": ac_question + '대답을 다 마치고 슝슝!이라고 말해줘'})
-            st.session_state.chat_history['AC'].append({"question": ac_question, "answer": result["result"]})
+            if ac_question != "":
+                result = qa_chain_ac({"query": ac_question + '대답을 다 마치고 슝슝!이라고 말해줘'})
+                st.session_state.chat_history['AC'].append({"question": ac_question, "answer": result["result"]})
 
         # 챗 기록 출력
         for chat in st.session_state.chat_history['AC']:
@@ -105,8 +106,9 @@ elif st.session_state.selected_device == 'TV':
         st.write("---")
         with st.spinner('Wait for it...'):
             qa_chain_tv = RetrievalQA.from_chain_type(llm, retriever=db_tv.as_retriever())
-            result = qa_chain_tv({"query": tv_question + '대답을 다 마치고 떼레비!라고 말해줘'})
-            st.session_state.chat_history['TV'].append({"question": tv_question, "answer": result["result"]})
+            if tv_question != "":
+                result = qa_chain_tv({"query": tv_question + '대답을 다 마치고 떼레비!라고 말해줘'})
+                st.session_state.chat_history['TV'].append({"question": tv_question, "answer": result["result"]})
 
         # 챗 기록 출력
         for chat in st.session_state.chat_history['TV']:
@@ -125,8 +127,9 @@ elif st.session_state.selected_device == 'HM':
         st.write("---")
         with st.spinner('Wait for it...'):
             qa_chain_hm = RetrievalQA.from_chain_type(llm, retriever=db_hm.as_retriever())
-            result = qa_chain_hm({"query": hm_question + '대답을 다 마치고 축축!이라고 말해줘'})
-            st.session_state.chat_history['HM'].append({"question": hm_question, "answer": result["result"]})
+            if hm_question != "":
+                result = qa_chain_hm({"query": hm_question + '대답을 다 마치고 축축!이라고 말해줘'})
+                st.session_state.chat_history['HM'].append({"question": hm_question, "answer": result["result"]})
 
         # 챗 기록 출력
         for chat in st.session_state.chat_history['HM']:
