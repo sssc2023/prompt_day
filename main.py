@@ -96,11 +96,11 @@ if st.session_state.selected_device == 'AC':
             result = qa_chain_ac({"query": ac_question})
             st.session_state.chat_history['AC'].append({"question": ac_question, "answer": result["result"]})
     # 챗 기록 출력
-    for chat in st.session_state.chat_history['AC']:
-        st.write("채팅내역")
-        st.markdown(f"🤔 {chat['question']}")
-        st.markdown(f"😊 {chat['answer']}")
-        st.write("---")
+    with st.expander("채팅내역"):
+        for chat in st.session_state.chat_history['AC']:
+            st.markdown(f"🤔 {chat['question']}")
+            st.markdown(f"😊 {chat['answer']}")
+            st.write("---")
 # TV
 elif st.session_state.selected_device == 'TV':
     st.subheader("📺TV에게 질문해보세요!")
@@ -127,11 +127,11 @@ elif st.session_state.selected_device == 'TV':
             result = qa_chain_tv({"query": tv_question})
             st.session_state.chat_history['TV'].append({"question": tv_question, "answer": result["result"]})
     # 챗 기록 출력
-    for chat in st.session_state.chat_history['TV']:
-        st.write("채팅내역")
-        st.markdown(f"🤔 {chat['question']}")
-        st.markdown(f"😊 {chat['answer']}")
-        st.write("---")
+    with st.expander("채팅내역"):
+        for chat in st.session_state.chat_history['TV']:
+            st.markdown(f"🤔 {chat['question']}")
+            st.markdown(f"😊 {chat['answer']}")
+            st.write("---")
 # Humidifier
 elif st.session_state.selected_device == 'HM':
     st.subheader("💧가습기에게 질문해보세요!")
@@ -158,8 +158,8 @@ elif st.session_state.selected_device == 'HM':
             result = qa_chain_hm({"query": hm_question})
             st.session_state.chat_history['HM'].append({"question": hm_question, "answer": result["result"]})
     # 챗 기록 출력
-    for chat in st.session_state.chat_history['HM']:
-        st.write("채팅내역")
-        st.markdown(f"🤔 {chat['question']}")
-        st.markdown(f"😊 {chat['answer']}")
-        st.write("---")
+    with st.expander("채팅내역"):
+        for chat in st.session_state.chat_history['HM']:
+            st.markdown(f"🤔 {chat['question']}")
+            st.markdown(f"😊 {chat['answer']}")
+            st.write("---")
