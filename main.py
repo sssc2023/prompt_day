@@ -16,15 +16,19 @@ import time
 from langchain import PromptTemplate
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
-#Stream 받아 줄 Hander 만들기
+# Stream 받아 줄 Hander 만들기
 from langchain.callbacks.base import BaseCallbackHandler
+
+
 class StreamHandler(BaseCallbackHandler):
     def __init__(self, container, initial_text=""):
         self.container = container
         self.text = initial_text
+
     def on_llm_new_token(self, token: str, **kwargs) -> None:
         self.text += token
         self.container.markdown(self.text)
+
 
 # 제목
 st.title("LookNTalk")
@@ -98,8 +102,8 @@ if st.session_state.selected_device == 'AC':
     with st.expander("채팅내역"):
         for chat in st.session_state.chat_history['AC']:
             st.markdown(f"🤔 {chat['question']}")
-            st.markdown(f"😊 {chat['answer']}")
-            
+            st.markdown(f"❄️{chat['answer']}")
+
 # TV
 elif st.session_state.selected_device == 'TV':
     st.subheader("📺TV에게 질문해보세요!")
@@ -128,7 +132,7 @@ elif st.session_state.selected_device == 'TV':
     with st.expander("채팅내역"):
         for chat in st.session_state.chat_history['TV']:
             st.markdown(f"🤔 {chat['question']}")
-            st.markdown(f"😊 {chat['answer']}")
+            st.markdown(f"📺 {chat['answer']}")
 
 # Humidifier
 elif st.session_state.selected_device == 'HM':
@@ -158,4 +162,4 @@ elif st.session_state.selected_device == 'HM':
     with st.expander("채팅내역"):
         for chat in st.session_state.chat_history['HM']:
             st.markdown(f"🤔 {chat['question']}")
-            st.markdown(f"😊 {chat['answer']}")
+            st.markdown(f"💧 {chat['answer']}")
