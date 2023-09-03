@@ -16,7 +16,7 @@ from langchain import PromptTemplate
 
 # 제목
 st.title("SightnSpeak")
-
+st.write("---")
 st.write('이곳은 당신의 집 입니다')
 
 # 방 이미지
@@ -25,6 +25,7 @@ room_img = Image.open('picture/living_room.png')
 room_img = room_img.resize((650, int(650 * (room_img.height / room_img.width))))
 st.image(room_img, width=650)
 st.write("---")
+
 db_ac = Chroma(persist_directory='./ac', embedding_function=OpenAIEmbeddings())
 db_tv = Chroma(persist_directory='./tv', embedding_function=OpenAIEmbeddings())
 db_hm = Chroma(persist_directory='./hm', embedding_function=OpenAIEmbeddings())
