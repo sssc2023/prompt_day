@@ -27,18 +27,20 @@ db_ac = Chroma(persist_directory='./ac', embedding_function=OpenAIEmbeddings())
 db_tv = Chroma(persist_directory='./tv', embedding_function=OpenAIEmbeddings())
 db_hm = Chroma(persist_directory='./hm', embedding_function=OpenAIEmbeddings())
 llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+
 def wrap_text(text, line_length=18):  # 챗봇 글자수 조절..
     lines = []
     for i in range(0, len(text), line_length):
         lines.append(text[i:i + line_length])
     return "\n".join(lines)
+    
 # 초기 세션 상태 설정
 if 'chat_history' not in st.session_state:
     st.session_state.chat_history = {'AC': [], 'TV': [], 'HM': []}
 if 'selected_device' not in st.session_state:
     st.session_state.selected_device = None
 
-    # Choice
+# Choice
 st.subheader("선택할 기기를 바라보세요!")
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -90,8 +92,8 @@ if st.session_state.selected_device == 'AC':
 
     # 챗 기록 출력
     for chat in st.session_state.chat_history['AC']:
-        st.text(f"🤔 {chat['question']}")
-        st.text(f"😊 {chat['answer']}")
+        st.text(f"🤔 {wrap_text(chat['question'])}")
+        st.text(f"😊 {wrap_text(chat['answer'])}")
         st.write("---")
 
 # TV
@@ -119,8 +121,8 @@ elif st.session_state.selected_device == 'TV':
 
     # 챗 기록 출력
     for chat in st.session_state.chat_history['TV']:
-        st.text(f"🤔 {chat['question']}")
-        st.text(f"😊 {chat['answer']}")
+        st.text(f"🤔 {wrap_text(chat['question'])}")
+        st.text(f"😊 {wrap_text(chat['answer'])}")
         st.write("---")
 
 # Humidifier
@@ -148,6 +150,6 @@ elif st.session_state.selected_device == 'HM':
 
     # 챗 기록 출력
     for chat in st.session_state.chat_history['HM']:
-        st.text(f"🤔 {chat['question']}")
-        st.text(f"😊 {chat['answer']}")
+        st.text(f"🤔 {wrap_text(chat['question'])}")
+        st.text(f"😊 {wrap_text(chat['answer'])}")
         st.write("---")
