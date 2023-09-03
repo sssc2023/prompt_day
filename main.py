@@ -99,7 +99,7 @@ if st.session_state.selected_device == 'AC':
             result = qa_chain_ac({"query": ac_question})
             st.session_state.chat_history['AC'].append({"question": ac_question, "answer": result["result"]})
     # 챗 기록 출력
-    with st.expander("채팅내역"):
+    with st.expander("채팅내역", expanded=True):
         for chat in st.session_state.chat_history['AC']:
             st.markdown(f"🤔 {chat['question']}")
             st.markdown(f"❄️{chat['answer']}")
@@ -129,7 +129,7 @@ elif st.session_state.selected_device == 'TV':
             result = qa_chain_tv({"query": tv_question})
             st.session_state.chat_history['TV'].append({"question": tv_question, "answer": result["result"]})
     # 챗 기록 출력
-    with st.expander("채팅내역"):
+    with st.expander("채팅내역", expanded=True):
         for chat in st.session_state.chat_history['TV']:
             st.markdown(f"🤔 {chat['question']}")
             st.markdown(f"📺 {chat['answer']}")
@@ -159,7 +159,7 @@ elif st.session_state.selected_device == 'HM':
             result = qa_chain_hm({"query": hm_question})
             st.session_state.chat_history['HM'].append({"question": hm_question, "answer": result["result"]})
     # 챗 기록 출력
-    with st.expander("채팅내역"):
+    with st.expander("채팅내역", expanded=True):
         for chat in st.session_state.chat_history['HM']:
             st.markdown(f"🤔 {chat['question']}")
             st.markdown(f"💧 {chat['answer']}")
