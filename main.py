@@ -76,8 +76,7 @@ if st.session_state.selected_device == 'AC':
     ac_img = Image.open('picture/air-conditioner.png')
     ac_img = ac_img.resize((100, 100))
     st.image(ac_img)
-    ac_question = st.text_input('안녕하세요, 전 에어컨이에요. 슝슝~', key='ac')
-    st.write("---")
+    ac_question = st.text_input('슝슝~ 뭐가 긍금하신가요?', key='ac')
     with st.spinner('Wait for it...'):
         prompt_template = """마지막 질문에 답변하기 위해 다음과 같은 정보를 사용하십시오.
         답을 모르면 그냥 모른다고 말하고, 답을 지어내려 하지 마세요. 그리고 에어컨이 사람이 되어 대답하는 것처럼 답변해주세요.
@@ -100,15 +99,14 @@ if st.session_state.selected_device == 'AC':
         for chat in st.session_state.chat_history['AC']:
             st.markdown(f"🤔 {chat['question']}")
             st.markdown(f"😊 {chat['answer']}")
-            st.write("---")
+            
 # TV
 elif st.session_state.selected_device == 'TV':
     st.subheader("📺TV에게 질문해보세요!")
     tv_img = Image.open('picture/television.png')
     tv_img = tv_img.resize((100, 100))
     st.image(tv_img)
-    tv_question = st.text_input('텔레비전에게 물어봐티비~')
-    st.write("---")
+    tv_question = st.text_input('궁금한걸 물어봐티비~')
     with st.spinner('Wait for it...'):
         prompt_template = """마지막 질문에 답변하기 위해 다음과 같은 정보를 사용하십시오.
         답을 모르면 그냥 모른다고 말하고, 답을 지어내려 하지 마세요. 그리고 텔레비전이 사람이 되어 대답하는 것처럼 답변해주세요.
@@ -131,15 +129,14 @@ elif st.session_state.selected_device == 'TV':
         for chat in st.session_state.chat_history['TV']:
             st.markdown(f"🤔 {chat['question']}")
             st.markdown(f"😊 {chat['answer']}")
-            st.write("---")
+
 # Humidifier
 elif st.session_state.selected_device == 'HM':
     st.subheader("💧가습기에게 질문해보세요!")
     hm_img = Image.open('picture/humidifier.png')
     hm_img = hm_img.resize((100, 100))
     st.image(hm_img)
-    hm_question = st.text_input('안녕? 내가 아는 모든 걸 촉촉하게 알려줄게!', key='hm')
-    st.write("---")
+    hm_question = st.text_input('내가 아는 모든 걸 촉촉하게 알려줄게요!', key='hm')
     with st.spinner('Wait for it...'):
         prompt_template = """마지막 질문에 답변하기 위해 다음과 같은 정보를 사용하십시오.
         답을 모르면 그냥 모른다고 말하고, 답을 지어내려 하지 마세요. 그리고 가습기가 사람이 되어 대답하는 것처럼 답변해주세요.
@@ -162,4 +159,3 @@ elif st.session_state.selected_device == 'HM':
         for chat in st.session_state.chat_history['HM']:
             st.markdown(f"🤔 {chat['question']}")
             st.markdown(f"😊 {chat['answer']}")
-            st.write("---")
