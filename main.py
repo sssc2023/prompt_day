@@ -18,10 +18,10 @@ from langchain import PromptTemplate
 st.title("SightnSpeak")
 
 # 방 이미지
-cyworld_img = Image.open('picture/livingroom.jpg')
+room_img = Image.open('picture/livingroom2.jpg')
 # 이미지 크기 조정
-cyworld_img = cyworld_img.resize((650, int(650 * (cyworld_img.height / cyworld_img.width))))
-st.image(cyworld_img, width=650)
+room_img = room_img.resize((650, int(650 * (room_img.height / room_img.width))))
+st.image(room_img, width=650)
 st.write("---")
 db_ac = Chroma(persist_directory='./ac', embedding_function=OpenAIEmbeddings())
 db_tv = Chroma(persist_directory='./tv', embedding_function=OpenAIEmbeddings())
