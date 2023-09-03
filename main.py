@@ -15,9 +15,11 @@ import time
 from langchain import PromptTemplate
 
 # 제목
-st.title("SightnSpeak")
+st.title("LookNTalk")
 st.write("---")
-st.write('이곳은 당신의 집 입니다')
+st.write('이곳은 당신의 집 입니다.')
+st.write('실제 서비스는 하드웨어(시선 추적용 카메라, 음성인식용 마이크 및 스피커)가 포함되어 있지만 이 MVP는 웹 상으로 시뮬레이션을 구현한것입니다. 하드웨어가 포함된 동작 영상을 참고해주세요. ')
+
 
 # 방 이미지
 room_img = Image.open('picture/living_room.png')
@@ -31,7 +33,7 @@ db_tv = Chroma(persist_directory='./tv', embedding_function=OpenAIEmbeddings())
 db_hm = Chroma(persist_directory='./hm', embedding_function=OpenAIEmbeddings())
 llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
 
-def wrap_text(text, line_length=18):  # 챗봇 글자수 조절..
+def wrap_text(text, line_length=10):  # 챗봇 글자수 조절..
     lines = []
     for i in range(0, len(text), line_length):
         lines.append(text[i:i + line_length])
@@ -64,82 +66,7 @@ with col3:
     st.image("picture/person_HM.jpg", width=100)
     st.markdown("💧가습기를 바라본다", unsafe_allow_html=True)
     if st.button("가습기 선택"):
-        st.success("가습기가 선택되었습니다.")
-        st.session_state.selected_device = 'HM'
-
-st.write("---")
-
-# 질문하기 창이 나타나는 조건을 추가
-# Air Conditioner
-if st.session_state.selected_device == 'AC':
-    st.subheader("❄️에어컨에게 질문해보세요!")
-    ac_img = Image.open('picture/air-conditioner.png')
-    ac_img = ac_img.resize((100, 100))
-    st.image(ac_img)
-    ac_question = st.text_input('안녕하세요, 전 에어컨이에요. 슝슝~', key='ac')
-    st.write("---")
-    with st.spinner('Wait for it...'):
-        prompt_template = """마지막 질문에 답변하기 위해 다음과 같은 정보를 사용하십시오.
-        답을 모르면 그냥 모른다고 말하고, 답을 지어내려 하지 마세요. 그리고 에어컨이 사람이 되어 대답하는 것처럼 답변해주세요.
-        말끝마다 '슝~'을 붙여주세요.
-        
-        {context}
-
-        질문: {question}"""
-        PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
-        chain_type_kwargs = {"prompt": PROMPT}
-        qa_chain_ac = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever(), chain_type_kwargs=chain_type_kwargs)
-        if ac_question != "":
-            result = qa_chain_ac({"query": ac_question})
-            st.session_state.chat_history['AC'].append({"question": ac_question, "answer": result["result"]})
-
-    # 챗 기록 출력
-    for chat in st.session_state.chat_history['AC']:
-        st.text(f"🤔 {wrap_text(chat['question'])}")
-        st.text(f"😊 {wrap_text(chat['answer'])}")
-        st.write("---")
-
-# TV
-elif st.session_state.selected_device == 'TV':
-    st.subheader("📺TV에게 질문해보세요!")
-    tv_img = Image.open('picture/television.png')
-    tv_img = tv_img.resize((100, 100))
-    st.image(tv_img)
-    tv_question = st.text_input('텔레비전에게 물어봐티비~')
-    st.write("---")
-    with st.spinner('Wait for it...'):
-        prompt_template = """마지막 질문에 답변하기 위해 다음과 같은 정보를 사용하십시오.
-        답을 모르면 그냥 모른다고 말하고, 답을 지어내려 하지 마세요. 그리고 텔레비전이 사람이 되어 대답하는 것처럼 답변해주세요.
-        친구에게 대답하는 것처럼 답변해주세요. 말끝마다 '티비!'를 붙여주세요.
-        
-        {context}
-
-        질문: {question}"""
-        PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
-        chain_type_kwargs = {"prompt": PROMPT}
-        qa_chain_tv = RetrievalQA.from_chain_type(llm, retriever=db_tv.as_retriever(), chain_type_kwargs=chain_type_kwargs)
-        if tv_question != "":
-            result = qa_chain_tv({"query": tv_question})
-            st.session_state.chat_history['TV'].append({"question": tv_question, "answer": result["result"]})
-
-    # 챗 기록 출력
-    for chat in st.session_state.chat_history['TV']:
-        st.text(f"🤔 {wrap_text(chat['question'])}")
-        st.text(f"😊 {wrap_text(chat['answer'])}")
-        st.write("---")
-
-# Humidifier
-elif st.session_state.selected_device == 'HM':
-    st.subheader("💧가습기에게 질문해보세요!")
-    hm_img = Image.open('picture/humidifier.png')
-    hm_img = hm_img.resize((100, 100))
-    st.image(hm_img)
-    hm_question = st.text_input('안녕? 내가 아는 모든 걸 촉촉하게 알려줄게!', key='hm')
-    st.write("---")
-    with st.spinner('Wait for it...'):
-        prompt_template = """마지막 질문에 답변하기 위해 다음과 같은 정보를 사용하십시오.
-        답을 모르면 그냥 모른다고 말하고, 답을 지어내려 하지 마세요. 그리고 가습기가 사람이 되어 대답하는 것처럼 답변해주세요.
-        말끝마다 '축축~'을 붙여주세요.
+        st.success("가습기가 선택되었습니다."촉~'을 붙여주세요.
         
         {context}
 
