@@ -92,8 +92,8 @@ if st.session_state.selected_device == 'AC':
             st.session_state.chat_history['AC'].append({"question": ac_question, "answer": result["result"]})
     # 챗 기록 출력
     for chat in st.session_state.chat_history['AC']:
-        st.text(f"🤔 {wrap_text(chat['question'])}")
-        st.text(f"😊 {wrap_text(chat['answer'])}")
+        st.markdown(f"🤔 {chat['question']}")
+        st.markdown(f"😊 {chat['answer']}")
         st.write("---")
 # TV
 elif st.session_state.selected_device == 'TV':
@@ -119,8 +119,8 @@ elif st.session_state.selected_device == 'TV':
             st.session_state.chat_history['TV'].append({"question": tv_question, "answer": result["result"]})
     # 챗 기록 출력
     for chat in st.session_state.chat_history['TV']:
-        st.text(f"🤔 {wrap_text(chat['question'])}")
-        st.text(f"😊 {wrap_text(chat['answer'])}")
+        st.markdown(f"🤔 {chat['question']}")
+        st.markdown(f"😊 {chat['answer']}")
         st.write("---")
 # Humidifier
 elif st.session_state.selected_device == 'HM':
@@ -146,6 +146,6 @@ elif st.session_state.selected_device == 'HM':
             st.session_state.chat_history['HM'].append({"question": hm_question, "answer": result["result"]})
     # 챗 기록 출력
     for chat in st.session_state.chat_history['HM']:
-        st.text(f"🤔 {wrap_text(chat['question'])}")
-        st.text(f"😊 {wrap_text(chat['answer'])}")
+        st.markdown(f"🤔 {chat['question']}")
+        st.markdown(f"😊 {chat['answer']}")
         st.write("---")
