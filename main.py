@@ -17,6 +17,8 @@ from langchain import PromptTemplate
 # 제목
 st.title("SightnSpeak")
 
+st.write('이곳은 당신의 집 입니다')
+
 # 방 이미지
 room_img = Image.open('picture/living_room.png')
 # 이미지 크기 조정
