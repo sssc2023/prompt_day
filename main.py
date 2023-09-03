@@ -20,7 +20,7 @@ st.title("SightnSpeak")
 # 방 이미지
 room_img = Image.open('picture/livingroom2.jpg')
 # 이미지 크기 조정
-room_img = room_img.resize((650, int(650 * (room_img.height / room_img.width))))
+#room_img = room_img.resize((650, int(650 * (room_img.height / room_img.width))))
 st.image(room_img, width=650)
 st.write("---")
 db_ac = Chroma(persist_directory='./ac', embedding_function=OpenAIEmbeddings())
