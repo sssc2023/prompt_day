@@ -22,9 +22,7 @@ st.write('이곳은 당신의 집 입니다.')
 st.write('실제 서비스는 하드웨어(시선 추적용 카메라, 음성인식용 마이크 및 스피커)가 포함되어 있지만 이 MVP는 웹 상으로 시뮬레이션을 구현한것입니다. 하드웨어가 포함된 동작 영상을 참고해주세요. ')
 
 # 방 이미지
-@ @-25
-
-, 6 + 25, 7 @ @
+room_img = Image.open('picture/living_room.png')
 room_img = room_img.resize((650, int(650 * (room_img.height / room_img.width))))
 st.image(room_img, width=650)
 st.write("---")
