@@ -18,7 +18,7 @@ from langchain import PromptTemplate
 st.title("SightnSpeak")
 
 # 방 이미지
-room_img = Image.open('picture/living_room.jpg')
+room_img = Image.open('picture/livingroom.jpg')
 # 이미지 크기 조정
 room_img = room_img.resize((650, int(650 * (room_img.height / room_img.width))))
 st.image(room_img, width=650)
