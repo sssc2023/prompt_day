@@ -80,7 +80,7 @@ if st.session_state.selected_device == 'AC':
     ac_img = Image.open('picture/air-conditioner.png')
     ac_img = ac_img.resize((100, 100))
     st.image(ac_img)
-    ac_question = st.text_input('슝슝~ 뭐가 긍금하신가요?', key='ac')
+    ac_question = st.text_input('슝슝~ 뭐가 궁금하신가요?', key='ac')
     with st.spinner('Wait for it...'):
         prompt_template = """마지막 질문에 답변하기 위해 다음과 같은 정보를 사용하십시오.
         에어컨이 사람이 되어 대답하는 것처럼 답변해주세요. 어떤 요청을 받으면 스스로 해주겠다고 대답하세요.
