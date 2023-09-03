@@ -14,6 +14,17 @@ import os
 from PIL import Image
 import time
 from langchain import PromptTemplate
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+
+#Stream 받아 줄 Hander 만들기
+from langchain.callbacks.base import BaseCallbackHandler
+class StreamHandler(BaseCallbackHandler):
+    def __init__(self, container, initial_text=""):
+        self.container = container
+        self.text = initial_text
+    def on_llm_new_token(self, token: str, **kwargs) -> None:
+        self.text += token
+        self.container.markdown(self.text)
 
 # 제목
 st.title("LookNTalk")
@@ -30,15 +41,6 @@ st.write("---")
 db_ac = Chroma(persist_directory='./ac', embedding_function=OpenAIEmbeddings())
 db_tv = Chroma(persist_directory='./tv', embedding_function=OpenAIEmbeddings())
 db_hm = Chroma(persist_directory='./hm', embedding_function=OpenAIEmbeddings())
-llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
-
-
-def wrap_text(text, line_length=30):  # 챗봇 글자수 조절..
-    lines = []
-    for i in range(0, len(text), line_length):
-        lines.append(text[i:i + line_length])
-    return "\n".join(lines)
-
 
 # 초기 세션 상태 설정
 if 'chat_history' not in st.session_state:
@@ -85,6 +87,9 @@ if st.session_state.selected_device == 'AC':
         질문: {question}"""
         PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
         chain_type_kwargs = {"prompt": PROMPT}
+        chat_box = st.empty()
+        stream_hander = StreamHandler(chat_box)
+        llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, streaming=True, callbacks=[stream_hander])
         qa_chain_ac = RetrievalQA.from_chain_type(llm, retriever=db_ac.as_retriever(),
                                                   chain_type_kwargs=chain_type_kwargs)
         if ac_question != "":
@@ -112,6 +117,9 @@ elif st.session_state.selected_device == 'TV':
         질문: {question}"""
         PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
         chain_type_kwargs = {"prompt": PROMPT}
+        chat_box = st.empty()
+        stream_hander = StreamHandler(chat_box)
+        llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, streaming=True, callbacks=[stream_hander])
         qa_chain_tv = RetrievalQA.from_chain_type(llm, retriever=db_tv.as_retriever(),
                                                   chain_type_kwargs=chain_type_kwargs)
         if tv_question != "":
@@ -139,6 +147,9 @@ elif st.session_state.selected_device == 'HM':
         질문: {question}"""
         PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
         chain_type_kwargs = {"prompt": PROMPT}
+        chat_box = st.empty()
+        stream_hander = StreamHandler(chat_box)
+        llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, streaming=True, callbacks=[stream_hander])
         qa_chain_hm = RetrievalQA.from_chain_type(llm, retriever=db_hm.as_retriever(),
                                                   chain_type_kwargs=chain_type_kwargs)
         if hm_question != "":
