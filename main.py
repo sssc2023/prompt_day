@@ -80,7 +80,7 @@ with col4:
     if st.button("선풍기 선택"):
         st.success("선풍기가 선택되었습니다.")
         st.session_state.selected_device = 'FAN'
-with col4:
+with col5:
     st.markdown("조명을 바라본다", unsafe_allow_html=True)
     if st.button("조명 선택"):
         st.success("조명이 선택되었습니다.")
