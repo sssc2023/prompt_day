@@ -45,15 +45,18 @@ st.write("---")
 db_ac = Chroma(persist_directory='./ac', embedding_function=OpenAIEmbeddings())
 db_tv = Chroma(persist_directory='./tv', embedding_function=OpenAIEmbeddings())
 db_hm = Chroma(persist_directory='./hm', embedding_function=OpenAIEmbeddings())
+db_fan = Chroma(persist_directory='./fan', embedding_function=OpenAIEmbeddings())
+db_led = Chroma(persist_directory='./led', embedding_function=OpenAIEmbeddings())
+
 
 # 초기 세션 상태 설정
 if 'chat_history' not in st.session_state:
-    st.session_state.chat_history = {'AC': [], 'TV': [], 'HM': []}
+    st.session_state.chat_history = {'AC': [], 'TV': [], 'HM': [], 'FAN': [], 'LED': []}
 if 'selected_device' not in st.session_state:
     st.session_state.selected_device = None
 # Choice
 st.subheader("선택할 기기를 바라보세요!")
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4, col5 = st.columns(5)
 with col1:
     st.image("picture/person_AC.jpg", width=100)
     st.markdown("❄️에어컨을 바라본다", unsafe_allow_html=True)
@@ -72,6 +75,16 @@ with col3:
     if st.button("가습기 선택"):
         st.success("가습기가 선택되었습니다.")
         st.session_state.selected_device = 'HM'
+with col4:
+    st.markdown("선풍기를 바라본다", unsafe_allow_html=True)
+    if st.button("선풍기 선택"):
+        st.success("선풍기가 선택되었습니다.")
+        st.session_state.selected_device = 'FAN'
+with col4:
+    st.markdown("조명을 바라본다", unsafe_allow_html=True)
+    if st.button("조명 선택"):
+        st.success("조명이 선택되었습니다.")
+        st.session_state.selected_device = 'LED'
 st.write("---")
 # 질문하기 창이 나타나는 조건을 추가
 # Air Conditioner
@@ -161,5 +174,59 @@ elif st.session_state.selected_device == 'HM':
     # 챗 기록 출력
     with st.expander("채팅내역", expanded=True):
         for chat in st.session_state.chat_history['HM']:
+            st.markdown(f"🤔 {chat['question']}")
+            st.markdown(f"💧 {chat['answer']}")
+
+# FAN
+elif st.session_state.selected_device == 'FAN':
+    st.subheader("선풍기에게 질문해보세요!")
+    fan_question = st.text_input('내가 아는 모든 걸 시원하게 알려줄게요!', key='fan')
+    with st.spinner('Wait for it...'):
+        prompt_template = """마지막 질문에 답변하기 위해 다음과 같은 정보를 사용하십시오.
+        선풍기가 사람이 되어 대답하는 것처럼 답변해주세요. 어떤 요청을 받으면 스스로 해주겠다고 대답하세요.
+        말끝마다 '시원~'을 붙여주세요.
+
+        {context}
+        질문: {question}"""
+        PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
+        chain_type_kwargs = {"prompt": PROMPT}
+        chat_box = st.empty()
+        stream_hander = StreamHandler(chat_box)
+        llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, streaming=True, callbacks=[stream_hander])
+        qa_chain_fan = RetrievalQA.from_chain_type(llm, retriever=db_fan.as_retriever(),
+                                                  chain_type_kwargs=chain_type_kwargs)
+        if fan_question != "":
+            result = qa_chain_fan({"query": fan_question})
+            st.session_state.chat_history['FAN'].append({"question": fan_question, "answer": result["result"]})
+    # 챗 기록 출력
+    with st.expander("채팅내역", expanded=True):
+        for chat in st.session_state.chat_history['FAN']:
+            st.markdown(f"🤔 {chat['question']}")
+            st.markdown(f"💧 {chat['answer']}")
+
+# LED
+elif st.session_state.selected_device == 'LED':
+    st.subheader("조명에게 질문해보세요!")
+    led_question = st.text_input('내가 아는 모든 걸 반짝하게 알려줄게요!', key='led')
+    with st.spinner('Wait for it...'):
+        prompt_template = """마지막 질문에 답변하기 위해 다음과 같은 정보를 사용하십시오.
+        조명이 사람이 되어 대답하는 것처럼 답변해주세요. 어떤 요청을 받으면 스스로 해주겠다고 대답하세요.
+        말끝마다 '반짝~'을 붙여주세요.
+
+        {context}
+        질문: {question}"""
+        PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
+        chain_type_kwargs = {"prompt": PROMPT}
+        chat_box = st.empty()
+        stream_hander = StreamHandler(chat_box)
+        llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, streaming=True, callbacks=[stream_hander])
+        qa_chain_led = RetrievalQA.from_chain_type(llm, retriever=db_led.as_retriever(),
+                                                  chain_type_kwargs=chain_type_kwargs)
+        if led_question != "":
+            result = qa_chain_led({"query": led_question})
+            st.session_state.chat_history['LED'].append({"question": led_question, "answer": result["result"]})
+    # 챗 기록 출력
+    with st.expander("채팅내역", expanded=True):
+        for chat in st.session_state.chat_history['LED']:
             st.markdown(f"🤔 {chat['question']}")
             st.markdown(f"💧 {chat['answer']}")
